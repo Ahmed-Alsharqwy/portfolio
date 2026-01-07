@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyber Security Portfolio of Ahmed Elsayed - Network Security & IoT Specialist.">
+    <meta name="keywords"
+        content="Cyber Security, Network Security, IoT Security, Penetration Testing, Ahmed Elsayed, Portfolio">
+    <meta name="author" content="Ahmed Elsayed">
+    <title>Ahmed Elsayed | Cyber Security Analyst</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;800&family=Fira+Code:wght@300;400;500;700&family=Inter:wght@300;400;600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Canvas Background for Matrix Effect -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <img id="nav-profile-img" src="images/profile_v2.png" alt="Profile">
+            <div class="logo">&lt; Ahmed_Elsayed /&gt;</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#hero">Home</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#skills">Skills</a></li>
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#education">Education</a></li>
+        </ul>
+        <div class="nav-actions">
+            <button id="theme-toggle" title="Change Theme"><i class="fas fa-palette"></i></button>
+            <div class="hamburger">
+                <span class="bar"></span>
+                <span class="bar"></span>
+                <span class="bar"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header id="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <p class="greeting">Hello, I'm</p>
+                <div class="glitch-wrapper">
+                    <h1 class="glitch" data-text="Ahmed Elsayed">Ahmed Elsayed</h1>
+                </div>
+                <h2 class="subtitle">Cyber Security Analyst | Network & IoT Specialist</h2>
+                <div class="typing-container">
+                    <p id="typing-text"></p><span class="cursor">|</span>
+                </div>
+
+                <div class="cta-buttons">
+                    <a href="#projects" class="btn btn-primary"><i class="fas fa-terminal"></i> View Projects</a>
+                    <a id="download-cv-btn" class="btn btn-secondary">
+                        <i class="fas fa-file-download"></i> Download CV
+                    </a>
+                </div>
+
+                <div class="hero-socials" style="margin-top: 40px;">
+                    <p style="color: var(--text-secondary); margin-bottom: 15px; font-size: 0.9rem;">Connect with me:
+                    </p>
+                    <div class="social-icons">
+                        <a href="mailto:alsharqwy152003@gmail.com" class="social-icon"><i
+                                class="fas fa-envelope"></i></a>
+                        <a href="https://wa.me/201116269882" target="_blank" title="WhatsApp" class="social-icon"><i
+                                class="fab fa-whatsapp"></i></a>
+                        <a href="https://linkedin.com/" target="_blank" class="social-icon"><i
+                                class="fab fa-linkedin"></i></a>
+                        <a href="https://github.com/" target="_blank" class="social-icon"><i
+                                class="fab fa-github"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="img-frame">
+                    <img id="hero-profile-img" src="images/profile_v2.png" alt="Ahmed Elsayed Profile">
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- About Section -->
+    <section id="about" class="container">
+        <h2 class="section-title"><span class="accent">01.</span> /whoami</h2>
+        <div class="about-grid">
+            <div class="about-text">
+                <p class="highlight-text">
+                    Cybersecurity Enthusiast & Life-long Learner
+                </p>
+                <p>
+                    Ahmed Elsayed is passionate about cybersecurity, building strong skills in fundamentals, penetration
+                    testing, and network defense.
+                </p>
+                <p>
+                    With hands-on experience using tools like Wireshark and Nmap, he is eager to apply his knowledge,
+                    contribute to the field, and keep advancing his expertise
+                </p>
+            </div>
+            <div class="about-stats">
+                <div class="stat-card">
+                    <i class="fas fa-graduation-cap"></i>
+                    <h3>IT Major</h3>
+                    <p>Borg El Arab Technological University</p>
+                </div>
+                <div class="stat-card">
+                    <div
+                        style="width: 40px; height: 40px; margin: 0 auto 15px; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px;">
+                        <img src="images/depi_logo.png" alt="DEPI"
+                            style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                    </div>
+                    <h3>DEPI</h3>
+                    <p>Digital Egypt Pioneers Initiative</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Skills Section -->
+    <section id="skills" class="container">
+        <h2 class="section-title"><span class="accent">02.</span> /skills</h2>
+
+        <div class="skills-wrapper">
+            <!-- Domain Proficiency -->
+            <div class="skill-category">
+                <h3><i class="fas fa-network-wired"></i> Core Competencies</h3>
+                <div class="skill-list">
+                    <!-- Dynamic Skills Here -->
+                </div>
+            </div>
+
+            <!-- Tools & Tech -->
+            <div class="skill-category">
+                <h3><i class="fas fa-tools"></i> Arsenal</h3>
+                <div class="tags-container">
+                    <span class="tag">Cisco Packet Tracer</span>
+                    <span class="tag">Wireshark</span>
+                    <span class="tag">Arduino IDE</span>
+                    <span class="tag">Nmap</span>
+                    <span class="tag">Linux</span>
+                    <span class="tag">TryHackMe</span>
+                </div>
+            </div>
+
+            <!-- Languages -->
+            <div class="skill-category">
+                <h3><i class="fas fa-code"></i> Languages</h3>
+                <div class="tags-container">
+                    <span class="tag func">C++ (Arduino)</span>
+                    <span class="tag func">JavaScript</span>
+                    <span class="tag func">HTML5</span>
+                    <span class="tag func">CSS3</span>
+                    <span class="tag func">English (Fluent)</span>
+                    <span class="tag func">Arabic (Native)</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="container">
+        <h2 class="section-title"><span class="accent">03.</span> /projects</h2>
+        <div class="projects-grid">
+            <!-- Dynamic Content Will Be Loaded Here -->
+        </div>
+    </section>
+
+    <!-- Education & Certifications Section -->
+    <section id="education" class="container">
+        <h2 class="section-title"><span class="accent">04.</span> /education_log</h2>
+        <div class="timeline">
+            <!-- Dynamic Courses Here -->
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="container">
+        <h2 class="section-title"><span class="accent">05.</span> /initiate_uplink</h2>
+        <p class="contact-text">
+            I am currently seeking an internship or entry-level opportunity to apply my skills in Network Security and
+            Vulnerability Assessment. Reach out to discuss how I can contribute to your security team.
+        </p>
+
+        <div class="contact-wrapper">
+            <a href="mailto:alsharqwy152003@gmail.com" class="btn btn-primary big-btn">
+                <i class="fas fa-envelope"></i> alsharqwy152003@gmail.com
+            </a>
+
+            <div class="social-links">
+                <a href="https://linkedin.com/in/ahmed-elsayed-3b487a290" target="_blank" aria-label="LinkedIn"
+                    title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="#" target="_blank" aria-label="GitHub" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://wa.me/201116269882" target="_blank" aria-label="WhatsApp" title="WhatsApp"><i
+                        class="fab fa-whatsapp"></i></a>
+            </div>
+
+            <div class="contact-details"
+                style="margin-top: 30px; font-family: var(--font-mono); color: var(--text-secondary);">
+                <p><i class="fas fa-map-marker-alt"></i> Alexandria, Borg El Arab City</p>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer & Admin Trigger -->
+    <footer>
+        <p class="mono-font">Designed & Built by Ahmed Elsayed</p>
+        <p class="copyright">&copy; 2026 All Rights Reserved. System Integrity Verified.</p>
+        <button id="manage-content-btn" title="Manage Content"><i class="fas fa-cog"></i></button>
+    </footer>
+
+    <!-- Admin Modal -->
+    <div id="admin-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header"
+                style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #333;">
+                <h2 style="margin:0; color:var(--accent);">Settings</h2>
+                <div style="display: flex; align-items: center; gap: 15px;">
+                    <button id="admin-logout" class="btn btn-secondary"
+                        style="padding: 5px 15px; font-size: 0.85rem; border-color: #ff3333; color: #ff3333;">Logout <i
+                            class="fas fa-sign-out-alt"></i></button>
+                    <span class="close-modal"
+                        style="float: none; font-size: 32px; line-height: 24px; display: block; margin-top: -4px;">&times;</span>
+                </div>
+            </div>
+
+            <div class="admin-tabs">
+                <button class="tab-btn active" data-target="form-project">Project</button>
+                <button class="tab-btn" data-target="form-skill">Skill</button>
+                <button class="tab-btn" data-target="form-course">Course</button>
+                <button class="tab-btn" data-target="form-profile">Profile</button>
+            </div>
+
+            <!-- Project Form -->
+            <div id="form-project" class="form-section active admin-form">
+                <h3>Add New Project</h3>
+                <input type="text" id="new-proj-title" placeholder="Project Title">
+                <input type="text" id="new-proj-url" placeholder="Project URL (e.g. https://github.com/...)">
+                <input type="file" id="new-proj-img" accept="image/*"
+                    style="padding: 10px; background: #050505; border: 1px solid #333; width: 100%; border-radius: 4px; margin-bottom: 10px;">
+                <textarea id="new-proj-desc" rows="3" placeholder="Description"></textarea>
+                <input type="text" id="new-proj-tech" placeholder="Technologies (comma separated)">
+                <button id="save-project" class="btn btn-primary">Save Project</button>
+            </div>
+
+            <!-- Profile Form -->
+            <div id="form-profile" class="form-section admin-form">
+                <h3>Update Profile & CV</h3>
+                <p style="color:var(--text-secondary); margin-bottom:10px; font-size:0.9rem;">Upload a new image to
+                    update both the Hero section and Navbar.</p>
+                <input type="file" id="new-profile-img" accept="image/*"
+                    style="padding: 10px; background: #050505; border: 1px solid #333; width: 100%; border-radius: 4px;">
+                <button id="save-profile" class="btn btn-primary" style="margin-top:10px;">Update Image</button>
+
+                <hr style="border:0; border-top:1px solid #333; margin:20px 0;">
+
+                <p style="color:var(--text-secondary); margin-bottom:10px; font-size:0.9rem;">Upload your CV (PDF/Doc)
+                    for visitors to download.</p>
+                <input type="file" id="new-cv-file" accept=".pdf,.doc,.docx"
+                    style="padding: 10px; background: #050505; border: 1px solid #333; width: 100%; border-radius: 4px;">
+                <button id="save-cv" class="btn btn-primary" style="margin-top:10px;">Upload CV</button>
+            </div>
+
+            <!-- Skill Form -->
+            <div id="form-skill" class="form-section admin-form">
+                <h3>Add New Skill</h3>
+                <input type="text" id="new-skill-name" placeholder="Skill Name">
+                <input type="number" id="new-skill-level" placeholder="Proficiency (0-100)" min="0" max="100">
+                <button id="save-skill" class="btn btn-primary">Save Skill</button>
+            </div>
+
+            <!-- Course Form -->
+            <div id="form-course" class="form-section admin-form">
+                <h3>Add Certification/Course</h3>
+                <input type="text" id="new-course-title" placeholder="Course Title">
+                <input type="text" id="new-course-issuer" placeholder="Issuer (e.g. Cisco)">
+                <input type="text" id="new-course-date" placeholder="Date">
+                <input type="file" id="new-course-img" accept="image/*"
+                    style="padding: 10px; background: #050505; border: 1px solid #333; width: 100%; border-radius: 4px;">
+                <button id="save-course" class="btn btn-primary">Save Course</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
