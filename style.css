@@ -968,7 +968,30 @@ footer {
         width: 150px;
     }
 }
+/* Make skills show 2 items per row on small screens */
+@media (max-width: 480px) {
+    .skill-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 12px;
+        justify-items: stretch;
+    }
 
+    .skill-item {
+        width: 100%;
+        padding: 12px;
+    }
+
+    /* Slightly smaller circles so two fit nicely */
+    .skill-circle {
+        width: 64px;
+        height: 64px;
+    }
+
+    .skill-circle::after {
+        width: 54px;
+        height: 54px;
+    }
+}
 @media (max-width: 768px) {
     .navbar {
         padding: 8px 15px;
@@ -1333,4 +1356,5 @@ body.admin-active .add-card {
 
 .icon-btn.delete:hover {
     color: #ff3333;
+
 }
