@@ -1086,14 +1086,28 @@ footer {
     }
 }
 
-@media (max-width: 480px) {
-    .glitch {
-        font-size: 28px;
+/* Mobile: show 2 skills per row */
+@media (max-width: 600px) {
+    .skill-list {
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 12px;
+        justify-items: stretch;
     }
 
-    .btn {
+    .skill-item {
         width: 100%;
-        text-align: center;
+        padding: 12px;
+    }
+
+    /* Adjust circles so two fit nicely */
+    .skill-circle {
+        width: 64px;
+        height: 64px;
+    }
+
+    .skill-circle::after {
+        width: 54px;
+        height: 54px;
     }
 }
 
@@ -1358,3 +1372,4 @@ body.admin-active .add-card {
     color: #ff3333;
 
 }
+
