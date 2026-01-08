@@ -99,6 +99,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let courses = [];
     let isEditing = false;
     let currentEditKey = null;
+    let cropper = null;
+    let currentFileTarget = null; // To know which input triggered the cropper
 
     // --- Core Functions ---
 
@@ -528,6 +530,68 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    // --- Cropper Logic ---
+    const cropModal = document.getElementById('crop-modal');
+    const cropPreview = document.getElementById('crop-preview');
+    const confirmCropBtn = document.getElementById('confirm-crop');
+    const closeCropBtn = document.querySelector('.close-crop');
+    const rotateLeft = document.getElementById('rotate-left');
+    const rotateRight = document.getElementById('rotate-right');
+
+    let croppedDataUrl = null;
+
+    function openCropper(file, targetInputId) {
+        currentFileTarget = targetInputId;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            cropPreview.src = e.target.result;
+            cropModal.style.display = 'block';
+
+            if (cropper) cropper.destroy();
+
+            cropper = new Cropper(cropPreview, {
+                aspectRatio: targetInputId === 'new-profile-img' ? 1 : NaN,
+                viewMode: 1,
+                autoCropArea: 1,
+            });
+        };
+        reader.readAsDataURL(file);
+    }
+
+    if (closeCropBtn) closeCropBtn.onclick = () => {
+        cropModal.style.display = 'none';
+        if (cropper) cropper.destroy();
+    };
+
+    if (rotateLeft) rotateLeft.onclick = () => cropper.rotate(-90);
+    if (rotateRight) rotateRight.onclick = () => cropper.rotate(90);
+
+    if (confirmCropBtn) confirmCropBtn.onclick = () => {
+        const canvas = cropper.getCroppedCanvas();
+        croppedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
+        cropModal.style.display = 'none';
+
+        // Trigger the actual save logic
+        if (currentFileTarget === 'new-proj-img') dom.saveProjBtn.click();
+        else if (currentFileTarget === 'new-course-img') dom.saveCourseBtn.click();
+        else if (currentFileTarget === 'new-profile-img') dom.saveProfileBtn.click();
+
+        if (cropper) cropper.destroy();
+        // Clear input so it can be re-selected
+        const input = document.getElementById(currentFileTarget);
+        if (input) input.value = '';
+    };
+
+    // Listeners for file inputs to trigger cropper
+    ['new-proj-img', 'new-course-img', 'new-profile-img'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.addEventListener('change', (e) => {
+            if (e.target.files[0]) {
+                openCropper(e.target.files[0], id);
+            }
+        });
+    });
+
     // Save Logic (RTDB)
     function saveItemToFirebase(path, data) {
         let promise;
@@ -544,11 +608,12 @@ document.addEventListener('DOMContentLoaded', () => {
         }).catch((e) => {
             console.error(e);
             alert("Error saving: " + e.message);
+            croppedDataUrl = null; // Clear even on error
         });
     }
 
     if (dom.saveProjBtn) dom.saveProjBtn.addEventListener('click', async () => {
-        dom.saveProjBtn.textContent = "Processing Image...";
+        dom.saveProjBtn.textContent = "Saving...";
         dom.saveProjBtn.disabled = true;
 
         const newItem = {
@@ -558,23 +623,11 @@ document.addEventListener('DOMContentLoaded', () => {
             url: dom.inputProjUrl.value
         };
 
-        const fileInput = document.getElementById('new-proj-img');
-        if (fileInput && fileInput.files[0]) {
-            try {
-                // Resize to max 800px for projects
-                const base64 = await resizeImage(fileInput.files[0], 800);
-                newItem.image = base64;
-                saveItemToFirebase(PROJECTS_REF, newItem);
-            } catch (e) {
-                console.error("Image processing error:", e);
-                alert("Upload Failed: " + e.message);
-                dom.saveProjBtn.textContent = "Save Project";
-                dom.saveProjBtn.disabled = false;
-                return;
-            }
-        } else {
-            saveItemToFirebase(PROJECTS_REF, newItem);
+        if (croppedDataUrl) {
+            newItem.image = croppedDataUrl;
         }
+
+        saveItemToFirebase(PROJECTS_REF, newItem);
 
         dom.saveProjBtn.textContent = "Save Project";
         dom.saveProjBtn.disabled = false;
@@ -598,44 +651,30 @@ document.addEventListener('DOMContentLoaded', () => {
             issuer: dom.inputCourseIssuer.value,
             date: dom.inputCourseDate.value
         };
-        const fileInput = document.getElementById('new-course-img');
-        if (fileInput && fileInput.files[0]) {
-            try {
-                const base64 = await resizeImage(fileInput.files[0], 600);
-                newItem.image = base64;
-                saveItemToFirebase(COURSES_REF, newItem);
-            } catch (e) {
-                console.error("Course image error:", e);
-                alert("Error optimizing certificate image: " + e.message);
-            }
-        } else {
-            saveItemToFirebase(COURSES_REF, newItem);
+        if (croppedDataUrl) {
+            newItem.image = croppedDataUrl;
         }
+
+        saveItemToFirebase(COURSES_REF, newItem);
+
         dom.saveCourseBtn.textContent = "Save Course";
         dom.saveCourseBtn.disabled = false;
     });
 
     // Profile Save
     if (dom.saveProfileBtn) dom.saveProfileBtn.addEventListener('click', async () => {
-        const fileInput = dom.inputProfileImg;
-        if (fileInput && fileInput.files[0]) {
+        if (croppedDataUrl) {
             dom.saveProfileBtn.textContent = "Uploading...";
             dom.saveProfileBtn.disabled = true;
-            try {
-                const base64 = await resizeImage(fileInput.files[0], 600);
-                db.ref(PROFILE_REF).update({ image: base64 }).then(() => {
-                    alert("Profile Image Updated!");
-                }).finally(() => {
-                    dom.saveProfileBtn.textContent = "Update Image";
-                    dom.saveProfileBtn.disabled = false;
-                });
-            } catch (e) {
-                alert("Error updating profile image: " + e.message);
+            db.ref(PROFILE_REF).update({ image: croppedDataUrl }).then(() => {
+                alert("Profile Image Updated!");
+                croppedDataUrl = null;
+            }).finally(() => {
                 dom.saveProfileBtn.textContent = "Update Image";
                 dom.saveProfileBtn.disabled = false;
-            }
+            });
         } else {
-            alert("Please select an image first.");
+            alert("Please select and crop an image first.");
         }
     });
 

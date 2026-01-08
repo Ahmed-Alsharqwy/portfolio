@@ -1077,21 +1077,64 @@ footer {
         text-align: center;
         padding: 12px 20px;
     }
-    
+
     .skill-item {
         width: 100%;
         padding: 10px 5px;
     }
-    
+
     .skill-circle {
         width: 70px;
         height: 70px;
     }
-    
+
     .skill-circle::after {
         width: 58px;
         height: 58px;
     }
+}
+
+/* --- Crop Modal --- */
+#crop-modal .modal-content {
+    width: 95%;
+    max-width: 700px;
+}
+
+#crop-modal .modal-body {
+    position: relative;
+    max-height: 70vh;
+    overflow: hidden;
+}
+
+#crop-preview {
+    display: block;
+    max-width: 100%;
+}
+
+.cropper-view-box,
+.cropper-face {
+    border-radius: 0;
+    /* Standard for projects */
+}
+
+body.theme-green .cropper-line,
+body.theme-green .cropper-point {
+    background-color: #00ff41;
+}
+
+body.theme-blue .cropper-line,
+body.theme-blue .cropper-point {
+    background-color: #00d2ff;
+}
+
+body.theme-red .cropper-line,
+body.theme-red .cropper-point {
+    background-color: #ff003c;
+}
+
+body.theme-purple .cropper-line,
+body.theme-purple .cropper-point {
+    background-color: #bc13fe;
 }
 
 /* --- Admin Modal --- */

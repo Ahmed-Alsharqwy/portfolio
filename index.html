@@ -20,8 +20,11 @@
     <!-- CSS -->
     <link rel="stylesheet" href="style.css">
 
-    <!-- FontAwesome for Icons -->
+    <!-- Fonts & Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Cropper.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.13/cropper.min.js"></script>
 </head>
 
 <body>
@@ -294,6 +297,27 @@
                     style="padding: 10px; background: #050505; border: 1px solid #333; width: 100%; border-radius: 4px;">
                 <button id="save-course" class="btn btn-primary">Save Course</button>
             </div>
+        </div>
+    </div>
+
+    <!-- Crop Modal -->
+    <div id="crop-modal" class="modal" style="z-index: 300;">
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 style="color:var(--accent);">Edit Image</h2>
+                <span class="close-crop" style="cursor:pointer; font-size: 28px;">&times;</span>
+            </div>
+            <div
+                style="height: 400px; background: #000; margin: 15px 0; overflow: hidden; border-radius: 8px; border: 1px solid #333;">
+                <img id="crop-preview" style="max-width: 100%;">
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: center; margin-bottom: 15px;">
+                <button id="rotate-left" class="btn btn-secondary" title="Rotate Left"><i
+                        class="fas fa-undo"></i></button>
+                <button id="rotate-right" class="btn btn-secondary" title="Rotate Right"><i
+                        class="fas fa-redo"></i></button>
+            </div>
+            <button id="confirm-crop" class="btn btn-primary" style="width: 100%;">Done & Save</button>
         </div>
     </div>
 
