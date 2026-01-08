@@ -459,15 +459,22 @@ document.addEventListener('DOMContentLoaded', () => {
     // Helper: Resize Image
     function resizeImage(file, maxWidth = 600) {
         return new Promise((resolve, reject) => {
+            if (!file) {
+                reject(new Error("No file selected"));
+                return;
+            }
             if (!file.type.match(/image.*/)) {
-                reject(new Error("File is not an image"));
+                reject(new Error(`File type is not supported (${file.type || 'unknown'}). Please use JPG or PNG.`));
                 return;
             }
             const reader = new FileReader();
-            reader.onerror = () => reject(new Error("Failed to read file"));
+            reader.onerror = (err) => {
+                console.error("FileReader Error:", err);
+                reject(new Error(`Browser could not read file. (Size: ${(file.size / 1024 / 1024).toFixed(2)}MB)`));
+            };
             reader.onload = (e) => {
                 const img = new Image();
-                img.onerror = () => reject(new Error("Failed to load image object"));
+                img.onerror = () => reject(new Error("Image data is corrupted or invalid."));
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     let width = img.width;
@@ -528,7 +535,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 saveItemToFirebase(PROJECTS_REF, newItem);
             } catch (e) {
                 console.error("Image processing error:", e);
-                alert("Could not process image: " + e.message);
+                alert("Upload Failed: " + e.message);
                 dom.saveProjBtn.textContent = "Save Project";
                 dom.saveProjBtn.disabled = false;
                 return;
