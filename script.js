@@ -110,10 +110,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const t = i18n[lang];
         document.querySelector('.subtitle').textContent = t.heroSubtitle;
         const mainBtns = document.querySelectorAll('.btn-primary');
-        if (mainBtns.length > 0) mainBtns[0].innerHTML = `<i class="fas fa-terminal"></i> ${t.heroBtnProject}`;
+        if (mainBtns.length > 0) mainBtns[0].innerHTML = `${t.heroBtnProject} <i class="fas fa-terminal"></i>`;
 
         const cvBtn = document.getElementById('download-cv-btn');
-        if (cvBtn) cvBtn.innerHTML = `<i class="fas fa-file-download"></i> ${t.heroBtnCV}`;
+        if (cvBtn) cvBtn.innerHTML = `${t.heroBtnCV} <i class="fas fa-file-download"></i>`;
 
         const navLinks = document.querySelectorAll('.nav-links li a');
         navLinks.forEach((a, index) => { if (t.nav[index]) a.textContent = t.nav[index]; });
