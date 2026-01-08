@@ -456,43 +456,75 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Helper: Resize Image
-    function resizeImage(file, maxWidth = 600) {
+    // Helper: Robust Resize Image
+    async function resizeImage(file, maxWidth = 600) {
         return new Promise((resolve, reject) => {
             if (!file) {
-                reject(new Error("No file selected"));
-                return;
+                return reject(new Error("لم يتم اختيار ملف. (No file selected)"));
             }
-            if (!file.type.match(/image.*/)) {
-                reject(new Error(`File type is not supported (${file.type || 'unknown'}). Please use JPG or PNG.`));
-                return;
+
+            // Validating file type
+            if (!file.type.startsWith('image/')) {
+                return reject(new Error(`نوع الملف غير مدعوم: ${file.type || 'غير معروف'}. يرجى استخدام صور JPG أو PNG.`));
             }
+
             const reader = new FileReader();
-            reader.onerror = (err) => {
-                console.error("FileReader Error:", err);
-                reject(new Error(`Browser could not read file. (Size: ${(file.size / 1024 / 1024).toFixed(2)}MB)`));
+
+            reader.onerror = () => {
+                const errorMap = {
+                    1: "NotFoundError",
+                    2: "SecurityError",
+                    3: "AbortError",
+                    4: "NotReadableError",
+                    5: "EncodingError"
+                };
+                const errName = reader.error ? reader.error.name : "UnknownError";
+                reject(new Error(`المتصفح لا يستطيع قراءة الملف: ${errName}. (حجمه: ${(file.size / 1024 / 1024).toFixed(2)}MB)`));
             };
+
             reader.onload = (e) => {
                 const img = new Image();
-                img.onerror = () => reject(new Error("Image data is corrupted or invalid."));
+                img.crossOrigin = "anonymous";
+                img.onerror = () => reject(new Error("بيانات الصورة تالفة أو غير صالحة للتحميل."));
                 img.onload = () => {
-                    const canvas = document.createElement('canvas');
-                    let width = img.width;
-                    let height = img.height;
-                    if (width > maxWidth) {
-                        height *= maxWidth / width;
-                        width = maxWidth;
+                    try {
+                        const canvas = document.createElement('canvas');
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > maxWidth) {
+                            height *= maxWidth / width;
+                            width = maxWidth;
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.imageSmoothingEnabled = true;
+                        ctx.imageSmoothingQuality = 'high';
+                        ctx.drawImage(img, 0, 0, width, height);
+
+                        // Fallback to lower quality if the result is still huge
+                        let dataUrl = canvas.toDataURL('image/jpeg', 0.6);
+                        if (dataUrl.length > 1000000) { // If > 1MB after resize
+                            dataUrl = canvas.toDataURL('image/jpeg', 0.4);
+                        }
+                        resolve(dataUrl);
+                    } catch (err) {
+                        reject(new Error("حدث خطأ أثناء معالجة أبعاد الصورة. " + err.message));
                     }
-                    canvas.width = width;
-                    canvas.height = height;
-                    const ctx = canvas.getContext('2d');
-                    ctx.drawImage(img, 0, 0, width, height);
-                    // Use 0.6 quality for better compression
-                    resolve(canvas.toDataURL('image/jpeg', 0.6));
                 };
                 img.src = e.target.result;
             };
-            reader.readAsDataURL(file);
+
+            // Start reading with a small delay for mobile OS file handover
+            setTimeout(() => {
+                try {
+                    reader.readAsDataURL(file);
+                } catch (err) {
+                    reject(new Error("فشل البدء في قراءة الملف: " + err.message));
+                }
+            }, 100);
         });
     }
 
