@@ -57,6 +57,46 @@ document.addEventListener('DOMContentLoaded', () => {
             contactTitle: "05. /initiate_uplink",
             contactText: "I am currently seeking an internship or entry-level opportunity.",
             typing: ["Network Security.", "IoT System Defense.", "Ethical Hacking."],
+        },
+        ar: {
+            nav: ["الرئيسية", "عني", "المهارات", "المشاريع", "التعليم", "اتصل بي"],
+            heroSubtitle: "محلل أمن سيبراني | متخصص في الشبكات وإنترنت الأشياء",
+            heroBtnProject: "عرض المشاريع",
+            heroBtnCV: "تحميل السيرة الذاتية",
+            heroBtnContact: "تواصل معي",
+            aboutTitle: "01. /من_أنا",
+            aboutText1: "شغوف بالأمن السيبراني ومتعلم مدى الحياة",
+            aboutText2: "أحمد السيد مهتم جداً بالأمن السيبراني، ويقوم ببناء مهارات قوية في الأساسيات واختبار الاختراق والدفاع عن الشبكات.",
+            aboutText3: "مع خبرة عملية في استخدام أدوات مثل Wireshark و Nmap، فهو متحمس لتطبيق معرفته والمساهمة في هذا المجال والاستمرار في تطوير خبراته.",
+            skillsTitle: "02. /المهارات",
+            coreComp: "الكفاءات الأساسية",
+            arsenal: "الترسانة التقنية",
+            languages: "اللغات",
+            projectsTitle: "03. /المشاريع",
+            eduTitle: "04. /سجل_التعليم",
+            contactTitle: "05. /بدء_الاتصال",
+            contactText: "أنا أبحث حالياً عن فرصة تدريب أو وظيفة للمبتدئين.",
+            typing: ["أمن الشبكات.", "حماية أنظمة IoT.", "الاختراق الأخلاقي."],
+        },
+        ar: {
+            nav: ["الرئيسية", "عني", "المهارات", "المشاريع", "التعليم", "اتصل بي"],
+            heroSubtitle: "محلل أمن سيبراني | متخصص في الشبكات وإنترنت الأشياء",
+            heroBtnProject: "عرض المشاريع",
+            heroBtnCV: "تحميل السيرة الذاتية",
+            heroBtnContact: "تواصل معي",
+            aboutTitle: "01. /من_أنا",
+            aboutText1: "شغوف بالأمن السيبراني ومتعلم مدى الحياة",
+            aboutText2: "أحمد السيد مهتم جداً بالأمن السيبراني، ويقوم ببناء مهارات قوية في الأساسيات واختبار الاختراق والدفاع عن الشبكات.",
+            aboutText3: "مع خبرة عملية في استخدام أدوات مثل Wireshark و Nmap، فهو متحمس لتطبيق معرفته والمساهمة في هذا المجال والاستمرار في تطوير خبراته.",
+            skillsTitle: "02. /المهارات",
+            coreComp: "الكفاءات الأساسية",
+            arsenal: "الترسانة التقنية",
+            languages: "اللغات",
+            projectsTitle: "03. /المشاريع",
+            eduTitle: "04. /سجل_التعليم",
+            contactTitle: "05. /بدء_الاتصال",
+            contactText: "أنا أبحث حالياً عن فرصة تدريب أو وظيفة للمبتدئين.",
+            typing: ["أمن الشبكات.", "حماية أنظمة IoT.", "الاختراق الأخلاقي."],
         }
     };
 
@@ -566,20 +606,50 @@ document.addEventListener('DOMContentLoaded', () => {
     if (rotateLeft) rotateLeft.onclick = () => cropper.rotate(-90);
     if (rotateRight) rotateRight.onclick = () => cropper.rotate(90);
 
-    if (confirmCropBtn) confirmCropBtn.onclick = () => {
-        const canvas = cropper.getCroppedCanvas();
-        croppedDataUrl = canvas.toDataURL('image/jpeg', 0.8);
-        cropModal.style.display = 'none';
+    if (confirmCropBtn) confirmCropBtn.onclick = async () => {
+        try {
+            confirmCropBtn.textContent = "Processing...";
+            confirmCropBtn.disabled = true;
 
-        // Trigger the actual save logic
-        if (currentFileTarget === 'new-proj-img') dom.saveProjBtn.click();
-        else if (currentFileTarget === 'new-course-img') dom.saveCourseBtn.click();
-        else if (currentFileTarget === 'new-profile-img') dom.saveProfileBtn.click();
+            const canvas = cropper.getCroppedCanvas({
+                maxWidth: 1000, // Hard limit for safety
+                maxHeight: 1000
+            });
 
-        if (cropper) cropper.destroy();
-        // Clear input so it can be re-selected
-        const input = document.getElementById(currentFileTarget);
-        if (input) input.value = '';
+            if (!canvas) throw new Error("Could not create canvas from crop area");
+
+            // Convert to blob first for better handling of large files
+            canvas.toBlob(async (blob) => {
+                try {
+                    // Use our robust resizeImage function to get final optimized Base64
+                    const finalBase64 = await resizeImage(blob, currentFileTarget === 'new-profile-img' ? 400 : 800);
+                    croppedDataUrl = finalBase64;
+
+                    cropModal.style.display = 'none';
+                    if (cropper) cropper.destroy();
+
+                    // Trigger the actual save logic
+                    if (currentFileTarget === 'new-proj-img') dom.saveProjBtn.click();
+                    else if (currentFileTarget === 'new-course-img') dom.saveCourseBtn.click();
+                    else if (currentFileTarget === 'new-profile-img') dom.saveProfileBtn.click();
+
+                    confirmCropBtn.textContent = "Done & Save";
+                    confirmCropBtn.disabled = false;
+
+                    const input = document.getElementById(currentFileTarget);
+                    if (input) input.value = '';
+                } catch (innerErr) {
+                    alert("Processing Error: " + innerErr.message);
+                    confirmCropBtn.disabled = false;
+                    confirmCropBtn.textContent = "Done & Save";
+                }
+            }, 'image/jpeg', 0.7);
+
+        } catch (err) {
+            alert("Crop Error: " + err.message);
+            confirmCropBtn.disabled = false;
+            confirmCropBtn.textContent = "Done & Save";
+        }
     };
 
     // Listeners for file inputs to trigger cropper
@@ -592,23 +662,39 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // --- CV Save stays direct (no crop for PDF/File) ---
+    if (dom.saveCvBtn) dom.saveCvBtn.addEventListener('click', () => {
+        const fileInput = dom.inputCvFile;
+        if (fileInput && fileInput.files[0]) {
+            dom.saveCvBtn.textContent = "Uploading...";
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                db.ref(PROFILE_REF).update({ cv: e.target.result }).then(() => {
+                    alert("تم رفع السيرة الذاتية بنجاح! ✅");
+                    dom.saveCvBtn.textContent = "Upload CV";
+                });
+            };
+            reader.readAsDataURL(fileInput.files[0]);
+        }
+    });
+
     // Save Logic (RTDB)
     function saveItemToFirebase(path, data) {
         let promise;
         if (isEditing && currentEditKey) {
             promise = db.ref(path + '/' + currentEditKey).update(data);
         } else {
-            // For RTDB, push() generates a unique key
             promise = db.ref(path).push(data);
         }
 
         promise.then(() => {
             if (dom.modal) dom.modal.style.display = 'none';
-            alert("Saved to Cloud!");
+            alert("تم الحفظ بنجاح! ✅");
+            croppedDataUrl = null; // Clear after save
         }).catch((e) => {
             console.error(e);
-            alert("Error saving: " + e.message);
-            croppedDataUrl = null; // Clear even on error
+            alert("خطأ في الحفظ: " + e.message);
+            croppedDataUrl = null;
         });
     }
 
@@ -661,36 +747,22 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.saveCourseBtn.disabled = false;
     });
 
-    // Profile Save
+    // Consolidating Profile Save
     if (dom.saveProfileBtn) dom.saveProfileBtn.addEventListener('click', async () => {
         if (croppedDataUrl) {
             dom.saveProfileBtn.textContent = "Uploading...";
             dom.saveProfileBtn.disabled = true;
             db.ref(PROFILE_REF).update({ image: croppedDataUrl }).then(() => {
-                alert("Profile Image Updated!");
+                alert("تم تحديث صورة الملف الشخصي بنجاح! ✅");
                 croppedDataUrl = null;
+            }).catch((e) => {
+                alert("خطأ أثناء الرفع: " + e.message);
             }).finally(() => {
                 dom.saveProfileBtn.textContent = "Update Image";
                 dom.saveProfileBtn.disabled = false;
             });
         } else {
-            alert("Please select and crop an image first.");
-        }
-    });
-
-    // CV Save
-    if (dom.saveCvBtn) dom.saveCvBtn.addEventListener('click', () => {
-        const fileInput = dom.inputCvFile;
-        if (fileInput && fileInput.files[0]) {
-            dom.saveCvBtn.textContent = "Uploading...";
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                db.ref(PROFILE_REF).update({ cv: e.target.result }).then(() => {
-                    alert("CV File Uploaded!");
-                    dom.saveCvBtn.textContent = "Upload CV";
-                });
-            };
-            reader.readAsDataURL(fileInput.files[0]);
+            alert("يرجى اختيار صورة وقصها أولاً.");
         }
     });
 
