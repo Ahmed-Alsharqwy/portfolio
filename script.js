@@ -457,11 +457,17 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Helper: Resize Image
-    function resizeImage(file, maxWidth) {
-        return new Promise((resolve) => {
+    function resizeImage(file, maxWidth = 600) {
+        return new Promise((resolve, reject) => {
+            if (!file.type.match(/image.*/)) {
+                reject(new Error("File is not an image"));
+                return;
+            }
             const reader = new FileReader();
+            reader.onerror = () => reject(new Error("Failed to read file"));
             reader.onload = (e) => {
                 const img = new Image();
+                img.onerror = () => reject(new Error("Failed to load image object"));
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     let width = img.width;
@@ -474,7 +480,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     canvas.height = height;
                     const ctx = canvas.getContext('2d');
                     ctx.drawImage(img, 0, 0, width, height);
-                    resolve(canvas.toDataURL('image/jpeg', 0.7));
+                    // Use 0.6 quality for better compression
+                    resolve(canvas.toDataURL('image/jpeg', 0.6));
                 };
                 img.src = e.target.result;
             };
@@ -502,26 +509,36 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     if (dom.saveProjBtn) dom.saveProjBtn.addEventListener('click', async () => {
-        dom.saveProjBtn.textContent = "Saving...";
+        dom.saveProjBtn.textContent = "Processing Image...";
+        dom.saveProjBtn.disabled = true;
+
         const newItem = {
             title: dom.inputProjTitle.value,
             desc: dom.inputProjDesc.value,
             tech: dom.inputProjTech.value,
             url: dom.inputProjUrl.value
         };
+
         const fileInput = document.getElementById('new-proj-img');
         if (fileInput && fileInput.files[0]) {
             try {
+                // Resize to max 800px for projects
                 const base64 = await resizeImage(fileInput.files[0], 800);
                 newItem.image = base64;
                 saveItemToFirebase(PROJECTS_REF, newItem);
             } catch (e) {
-                alert("Image func failed");
+                console.error("Image processing error:", e);
+                alert("Could not process image: " + e.message);
+                dom.saveProjBtn.textContent = "Save Project";
+                dom.saveProjBtn.disabled = false;
+                return;
             }
         } else {
             saveItemToFirebase(PROJECTS_REF, newItem);
         }
-        dom.saveProjBtn.textContent = "Save";
+
+        dom.saveProjBtn.textContent = "Save Project";
+        dom.saveProjBtn.disabled = false;
     });
 
     // Skills Save
@@ -534,6 +551,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Course Save
     if (dom.saveCourseBtn) dom.saveCourseBtn.addEventListener('click', async () => {
+        dom.saveCourseBtn.textContent = "Saving...";
+        dom.saveCourseBtn.disabled = true;
+
         const newItem = {
             title: dom.inputCourseTitle.value,
             issuer: dom.inputCourseIssuer.value,
@@ -542,13 +562,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileInput = document.getElementById('new-course-img');
         if (fileInput && fileInput.files[0]) {
             try {
-                const base64 = await resizeImage(fileInput.files[0], 800);
+                const base64 = await resizeImage(fileInput.files[0], 600);
                 newItem.image = base64;
                 saveItemToFirebase(COURSES_REF, newItem);
-            } catch (e) { }
+            } catch (e) {
+                console.error("Course image error:", e);
+                alert("Error optimizing certificate image: " + e.message);
+            }
         } else {
             saveItemToFirebase(COURSES_REF, newItem);
         }
+        dom.saveCourseBtn.textContent = "Save Course";
+        dom.saveCourseBtn.disabled = false;
     });
 
     // Profile Save
@@ -556,16 +581,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const fileInput = dom.inputProfileImg;
         if (fileInput && fileInput.files[0]) {
             dom.saveProfileBtn.textContent = "Uploading...";
+            dom.saveProfileBtn.disabled = true;
             try {
                 const base64 = await resizeImage(fileInput.files[0], 600);
                 db.ref(PROFILE_REF).update({ image: base64 }).then(() => {
                     alert("Profile Image Updated!");
+                }).finally(() => {
                     dom.saveProfileBtn.textContent = "Update Image";
+                    dom.saveProfileBtn.disabled = false;
                 });
             } catch (e) {
-                alert("Error updating profile image");
+                alert("Error updating profile image: " + e.message);
                 dom.saveProfileBtn.textContent = "Update Image";
+                dom.saveProfileBtn.disabled = false;
             }
+        } else {
+            alert("Please select an image first.");
         }
     });
 

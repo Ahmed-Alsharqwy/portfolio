@@ -968,30 +968,7 @@ footer {
         width: 150px;
     }
 }
-/* Make skills show 2 items per row on small screens */
-@media (max-width: 480px) {
-    .skill-list {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 12px;
-        justify-items: stretch;
-    }
 
-    .skill-item {
-        width: 100%;
-        padding: 12px;
-    }
-
-    /* Slightly smaller circles so two fit nicely */
-    .skill-circle {
-        width: 64px;
-        height: 64px;
-    }
-
-    .skill-circle::after {
-        width: 54px;
-        height: 54px;
-    }
-}
 @media (max-width: 768px) {
     .navbar {
         padding: 8px 15px;
@@ -1068,15 +1045,19 @@ footer {
     }
 
     .about-stats {
-        flex-direction: row;
-        flex-wrap: wrap;
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
 
     .stat-card {
-        flex: 1 1 200px;
+        padding: 25px 15px;
     }
 
-    .skill-list,
+    .skill-list {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px;
+    }
+
     .projects-grid {
         grid-template-columns: 1fr;
     }
@@ -1086,28 +1067,30 @@ footer {
     }
 }
 
-/* Mobile: show 2 skills per row */
-@media (max-width: 600px) {
-    .skill-list {
-        grid-template-columns: repeat(2, 1fr) !important;
-        gap: 12px;
-        justify-items: stretch;
+@media (max-width: 480px) {
+    .glitch {
+        font-size: 28px;
     }
 
+    .btn {
+        width: 100%;
+        text-align: center;
+        padding: 12px 20px;
+    }
+    
     .skill-item {
         width: 100%;
-        padding: 12px;
+        padding: 10px 5px;
     }
-
-    /* Adjust circles so two fit nicely */
+    
     .skill-circle {
-        width: 64px;
-        height: 64px;
+        width: 70px;
+        height: 70px;
     }
-
+    
     .skill-circle::after {
-        width: 54px;
-        height: 54px;
+        width: 58px;
+        height: 58px;
     }
 }
 
@@ -1370,5 +1353,4 @@ body.admin-active .add-card {
 
 .icon-btn.delete:hover {
     color: #ff3333;
-   /*.    .*/
 }
