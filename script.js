@@ -246,7 +246,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function attemptLogin() {
         const pass = prompt("Enter Admin Password:");
-        if (pass === 'admin') {
+        if (pass === '152003@22') {
             enableAdminMode();
         } else if (pass !== null) {
             alert("Access Denied");
